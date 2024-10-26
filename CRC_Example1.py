@@ -1,3 +1,4 @@
+
 def binary_crc_remainder(dividend: str, divisor: str):
     # Convert binary strings to integers
     dividend = int(dividend, 2)
