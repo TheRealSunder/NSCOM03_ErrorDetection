@@ -24,7 +24,7 @@ def receiver(received_data):
     else:
         print(f"Receiver - Error detected in received data: {data}, Checksum: {received_checksum}")
 
-data_string = "NSCOM3"
+data_string = "PKA_NSCOM03"
 data = [ord(char) for char in data_string]
 sent_data = sender(data)
 receiver(sent_data)

@@ -1,28 +1,24 @@
-def getChecksum(data):
-    checksum = data[-1]  
-    actual_data = data[:-1] 
-    return checksum, actual_data
-
 def calculate_checksum(data):
-    total_sum = sum(data)
-    wrapped_sum = (total_sum & 0b1111) + (total_sum >> 4)
-    checksum = ~wrapped_sum & 0b1111
+    total = sum(data)
+    while total > 15:
+        total = (total & 0xF) + (total >> 4)
+    checksum = ~total & 0xF
     return checksum
 
 def sender(data):
-    checksum = calculate_checksum(data)
-    print(f"Sender - Data: {data}, Checksum: {checksum}")
-    return data + [checksum]
+    sender_checksum = calculate_checksum(data)
+    sent_data = data + [sender_checksum]
+    print(f"Sender Checksum: {sender_checksum}")
+    print(f"Data sent: {sent_data}")
+    return sent_data
 
-def receiver(received_data):
-    received_checksum, data = getChecksum(received_data)
-    total_sum = sum(data) + received_checksum
-    wrapped_sum = (total_sum & 0b1111) + (total_sum >> 4)
-    verification_result = ~wrapped_sum & 0b1111
-    if verification_result == 0:
-        print(f"Receiver - Data received correctly: {data}, Checksum: {received_checksum}")
+def receiver(sent_data):
+    receiver_checksum = calculate_checksum(sent_data)
+    print(f"Receiver Checksum: {receiver_checksum}")
+    if receiver_checksum == 0:
+        print("Data received successfully with no errors.")
     else:
-        print(f"Receiver - Error detected in received data: {data}, Checksum: {received_checksum}")
+        print("Error detected in received data.")
 
 data = [7, 11, 12, 0, 6]
 sent_data = sender(data)
